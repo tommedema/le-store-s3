@@ -106,22 +106,27 @@ class Accounts {
     }
 
     const { s3, options } = this.store
-    const { bucketName } = options.S3
-    const Bucket = bucketName
+    const { ACL, bucketName: Bucket, ServerSideEncryption } = options.S3
 
     return Promise.all([
       s3.putObjectAsync({
+        ACL,
         Bucket,
+        ServerSideEncryption,
         Key: path.join(accountDir, 'meta.json'),
         Body: JSON.stringify(accountMeta)
       }),
       s3.putObjectAsync({
+        ACL,
         Bucket,
+        ServerSideEncryption,
         Key: path.join(accountDir, 'private_key.json'),
         Body: JSON.stringify(keypair.privateKeyJwk)
       }),
       s3.putObjectAsync({
+        ACL,
         Bucket,
+        ServerSideEncryption,
         Key: path.join(accountDir, 'regr.json'),
         Body: JSON.stringify({ body: receipt })
       })

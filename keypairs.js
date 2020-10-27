@@ -29,9 +29,11 @@ class Keypairs {
       : keypair.privateKeyPem
 
     const { s3, options } = this.store
-    const { bucketName } = options.S3
+    const { ACL, bucketName: Bucket, ServerSideEncryption } = options.S3
     return s3.putObjectAsync({
-      Bucket: bucketName,
+      ACL,
+      Bucket,
+      ServerSideEncryption,
       Key: keypath,
       Body: key
     }).then(() => keypair)

@@ -173,10 +173,12 @@ class Configs {
     })
 
     const { s3, options } = this.store
-    const Bucket = options.S3.bucketName
+    const { ACL, bucketName: Bucket, ServerSideEncryption } = options.S3
     return pyconf.stringifyAsync(pyobj)
       .then(Body => s3.putObjectAsync({
+        ACL,
         Bucket,
+        ServerSideEncryption,
         Body,
         Key: renewalPath
       })).then(() => pyobj)

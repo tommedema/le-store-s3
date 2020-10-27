@@ -59,7 +59,7 @@ class Certificates {
   }) {
     const { s3, options } = this.store
     const configs = this.configs
-    const Bucket = options.S3.bucketName
+    const { ACL, bucketName: Bucket, ServerSideEncryption } = options.S3
     return this.configs.getAsync({
       liveDir,
       configDir,
@@ -98,14 +98,14 @@ class Certificates {
       const privkeyArchive = path.join(archiveDir, `privkey${checkpoints}.pem`)
 
       return Promise.all([
-        s3.putObjectAsync({ Bucket, Key: certArchive, Body: pems.cert }),
-        s3.putObjectAsync({ Bucket, Key: certPath, Body: pems.cert }),
-        s3.putObjectAsync({ Bucket, Key: chainArchive, Body: pems.chain }),
-        s3.putObjectAsync({ Bucket, Key: chainPath, Body: pems.chain }),
-        s3.putObjectAsync({ Bucket, Key: fullchainArchive, Body: pems.cert + pems.chain }),
-        s3.putObjectAsync({ Bucket, Key: fullchainPath, Body: pems.cert + pems.chain }),
-        s3.putObjectAsync({ Bucket, Key: privkeyArchive, Body: pems.privkey }),
-        s3.putObjectAsync({ Bucket, Key: privkeyPath, Body: pems.privkey })])
+        s3.putObjectAsync({ ACL, Bucket, ServerSideEncryption, Key: certArchive, Body: pems.cert }),
+        s3.putObjectAsync({ ACL, Bucket, ServerSideEncryption, Key: certPath, Body: pems.cert }),
+        s3.putObjectAsync({ ACL, Bucket, ServerSideEncryption, Key: chainArchive, Body: pems.chain }),
+        s3.putObjectAsync({ ACL, Bucket, ServerSideEncryption, Key: chainPath, Body: pems.chain }),
+        s3.putObjectAsync({ ACL, Bucket, ServerSideEncryption, Key: fullchainArchive, Body: pems.cert + pems.chain }),
+        s3.putObjectAsync({ ACL, Bucket, ServerSideEncryption, Key: fullchainPath, Body: pems.cert + pems.chain }),
+        s3.putObjectAsync({ ACL, Bucket, ServerSideEncryption, Key: privkeyArchive, Body: pems.privkey }),
+        s3.putObjectAsync({ ACL, Bucket, ServerSideEncryption, Key: privkeyPath, Body: pems.privkey })])
       .then(() => {
         pyobj.checkpoints += 1
         return configs.writeRenewalConfig({
